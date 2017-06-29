@@ -36,7 +36,11 @@ final class DialogManager {
             public void onClick(DialogInterface dialog, int which) {
                 final Intent intentToAppstore = options.getStoreType() == StoreType.GOOGLEPLAY ?
                 createIntentForGooglePlay(context) : createIntentForAmazonAppstore(context);
-                context.startActivity(intentToAppstore);
+                try {
+                    context.startActivity(intentToAppstore);
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + context.getPackageName())));
+                }
                 setAgreeShowDialog(context, false);
                 if (listener != null) listener.onClickButton(which);
             }
